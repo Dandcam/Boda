@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#fdf1f4">
+<title>Comparte tus fotos · Nuestra boda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --rose:#f7d6df; --rose-deep:#e9a9ba; --peach:#fde3d3; --mint:#d6efe3;
+    --lavender:#e4dcf6; --sky:#d9ebf7; --cream:#fffaf6; --ink:#6b5560; --ink-soft:#9b8790;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;min-height:100%}
+  body{
+    font-family:'Quicksand',system-ui,sans-serif; color:var(--ink);
+    background:
+      radial-gradient(circle at 10% 8%, var(--rose) 0, transparent 38%),
+      radial-gradient(circle at 92% 12%, var(--lavender) 0, transparent 36%),
+      radial-gradient(circle at 85% 92%, var(--mint) 0, transparent 38%),
+      radial-gradient(circle at 8% 90%, var(--peach) 0, transparent 38%),
+      var(--cream);
+    background-attachment:fixed;
+    display:flex; justify-content:center; padding:max(20px,env(safe-area-inset-top)) 16px 32px;
+  }
+  .card{
+    width:100%; max-width:440px; background:rgba(255,255,255,.78);
+    backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+    border:1px solid rgba(255,255,255,.9); border-radius:32px;
+    box-shadow:0 18px 50px rgba(200,150,170,.22); padding:30px 24px 26px; text-align:center;
+    align-self:flex-start; margin-top:8px;
+  }
+  .monogram{font-size:30px;line-height:1;margin-bottom:6px}
+  h1{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:38px;line-height:1.05;margin:4px 0 4px;color:#7a5a68}
+  h1 em{font-style:italic;color:var(--rose-deep);font-weight:500}
+  .date{font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 18px}
+  p.lead{margin:0 0 20px;font-size:15.5px;line-height:1.55;color:var(--ink)}
+  .screen{display:none;animation:fade .35s ease}
+  .screen.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+  .pick{
+    border:2px dashed var(--rose-deep); background:#fff6f8; color:var(--ink);
+    border-radius:22px; padding:18px 8px; font:inherit; font-weight:600; font-size:14.5px; cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;gap:8px;transition:.2s;
+  }
+  .pick:nth-child(2){border-color:#a9c9e6;background:#f3f9fe}
+  .pick:active{transform:scale(.97)}
+  .pick .ico{font-size:30px}
+
+  input[type=text]{
+    width:100%; border:1.5px solid #f0dfe5; background:#fff; border-radius:16px; padding:13px 16px;
+    font:inherit; font-size:15px; color:var(--ink); text-align:center; outline:none; margin-bottom:16px;
+  }
+  input[type=text]:focus{border-color:var(--rose-deep);box-shadow:0 0 0 4px rgba(233,169,186,.2)}
+
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 14px}
+  .thumb{position:relative;aspect-ratio:1;border-radius:16px;overflow:hidden;background:var(--lavender)}
+  .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .thumb button{
+    position:absolute;top:5px;right:5px;width:26px;height:26px;border-radius:50%;border:none;
+    background:rgba(255,255,255,.92);color:var(--ink);font-size:15px;line-height:1;cursor:pointer;
+    box-shadow:0 2px 6px rgba(0,0,0,.15)
+  }
+  .count{font-size:13.5px;color:var(--ink-soft);margin:0 0 14px;min-height:20px}
+
+  .buttons{display:grid;grid-template-columns:1fr 1.4fr;gap:12px}
+  .btn{
+    border:none;border-radius:999px;padding:15px 12px;font:inherit;font-weight:600;font-size:16px;cursor:pointer;transition:.2s;
+  }
+  .btn:active{transform:scale(.97)}
+  .btn.cancel{background:#f1ecf4;color:var(--ink)}
+  .btn.send{background:linear-gradient(135deg,#f6b9c9,#f3a6bd);color:#fff;box-shadow:0 8px 20px rgba(240,150,175,.38)}
+  .btn.send:disabled{background:#eadde2;box-shadow:none;color:#fff;cursor:not-allowed}
+  .btn.again{background:linear-gradient(135deg,#bfe3d0,#a9d6c2);color:#fff;box-shadow:0 8px 20px rgba(140,200,170,.35);width:100%}
+
+  .progress{height:10px;background:#f4e8ec;border-radius:99px;overflow:hidden;margin:18px 0 10px}
+  .progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,#f6b9c9,#c9b8ee);border-radius:99px;transition:width .3s}
+  .error{background:#fff0ee;color:#b0584d;border-radius:14px;padding:10px 12px;font-size:14px;margin:0 0 14px;display:none}
+
+  .qrbox{display:inline-block;background:#fff;padding:16px;border-radius:24px;box-shadow:0 10px 30px rgba(200,150,170,.25);margin:4px 0 18px}
+  .qrbox svg,.qrbox img{display:block;width:210px;height:210px}
+  .big{font-size:56px;margin:4px 0 8px}
+  .hint{font-size:12.5px;color:var(--ink-soft);margin-top:16px;line-height:1.5}
+  .petals{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:-1}
+  .petals span{position:absolute;top:-30px;font-size:18px;opacity:.55;animation:fall linear infinite}
+  @keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
+  @media (prefers-reduced-motion:reduce){.petals{display:none}.screen{animation:none}}
+</style>
+</head>
+<body>
+<div class="petals" id="petals" aria-hidden="true"></div>
+
+<main class="card">
+  <div class="monogram">🌸</div>
+  <h1 id="names">Tania <em>&amp;</em> Deiber</h1>
+  <p class="date" id="date">05 · 12 · 2026</p>
+
+  <!-- PANTALLA 1: subir fotos -->
+  <section class="screen active" id="s-upload">
+    <p class="lead">¡Gracias por celebrar con nosotros!<br>Comparte las fotos que tomaste hoy 💕</p>
+
+    <div class="actions">
+      <button class="pick" id="btnCamera" type="button"><span class="ico">📷</span>Tomar foto</button>
+      <button class="pick" id="btnGallery" type="button"><span class="ico">🖼️</span>Elegir de la galería</button>
+    </div>
+    <input type="file" id="inCamera" accept="image/*" capture="environment" hidden>
+    <input type="file" id="inGallery" accept="image/*" multiple hidden>
+
+    <input type="text" id="guest" maxlength="30" placeholder="Tu nombre (opcional)" autocomplete="name">
+
+    <div class="grid" id="grid"></div>
+    <p class="count" id="count">Aún no has agregado fotos</p>
+    <div class="error" id="error"></div>
+
+    <div class="buttons">
+      <button class="btn cancel" id="btnCancel" type="button">Cancelar</button>
+      <button class="btn send" id="btnSend" type="button" disabled>Enviar</button>
+    </div>
+  </section>
+
+  <!-- PANTALLA 2: enviando -->
+  <section class="screen" id="s-sending">
+    <div class="big">💌</div>
+    <p class="lead" id="sendingText">Enviando tus fotos…</p>
+    <div class="progress"><i id="bar"></i></div>
+    <p class="count" id="sendingCount"></p>
+    <p class="hint">Por favor no cierres esta ventana hasta terminar.</p>
+  </section>
+
+  <!-- PANTALLA 3: gracias -->
+  <section class="screen" id="s-done">
+    <div class="big">🥂</div>
+    <p class="lead"><strong>¡Gracias!</strong><br>Tus fotos llegaron a salvo a los novios.</p>
+    <button class="btn again" id="btnAgain" type="button">Enviar más fotos</button>
+  </section>
+
+  <!-- PANTALLA 4: escanear QR (al cancelar) -->
+  <section class="screen" id="s-scan">
+    <p class="lead">Escanea el código QR<br>para compartir tus fotos de la boda</p>
+    <div class="qrbox" id="qr"></div>
+    <button class="btn again" id="btnBack" type="button">Compartir fotos</button>
+    <p class="hint">Apunta la cámara de tu celular al código impreso.</p>
+  </section>
+</main>
+
+<script src="qrcode.js"></script>
+<script>
+/* ============ CONFIGURACIÓN (edita solo esta parte) ============ */
+const CONFIG = {
+  names: ['Tania', 'Deiber'],            // nombres de los novios
+  date: '05 · 12 · 2026',            // fecha que se muestra
+  // URL de tu Apps Script (termina en /exec). Ver README paso 2.
+  scriptUrl: 'https://script.google.com/macros/s/AKfycbzEjRReA4tzUEur33w-IJFnCYXRSgy2niA23Wd5_13GCGQsPKe6iRccONfERSZx_zUUGA/exec',
+  maxSide: 2400,                     // las fotos se reducen a este tamaño máximo (px) para subir rápido
+  quality: 0.88,                     // calidad JPEG (0 a 1)
+  maxPhotos: 30                      // máximo de fotos por envío
+};
+/* ================================================================ */
+
+const $ = id => document.getElementById(id);
+let files = [];   // [{file, url}]
+let lastError = '';
+
+document.getElementById('names').innerHTML = `${esc(CONFIG.names[0])} <em>&amp;</em> ${esc(CONFIG.names[1])}`;
+document.getElementById('date').textContent = CONFIG.date;
+document.title = `Fotos de la boda de ${CONFIG.names[0]} y ${CONFIG.names[1]}`;
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  $(id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ---- Selección de fotos ---- */
+$('btnCamera').onclick = () => $('inCamera').click();
+$('btnGallery').onclick = () => $('inGallery').click();
+['inCamera','inGallery'].forEach(id=>{
+  $(id).addEventListener('change', e=>{
+    for (const f of e.target.files) {
+      if (files.length >= CONFIG.maxPhotos) { showError(`Máximo ${CONFIG.maxPhotos} fotos por envío.`); break; }
+      if (!f.type.startsWith('image/') && !/\.(heic|heif)$/i.test(f.name)) continue;
+      files.push({file:f, url:URL.createObjectURL(f)});
+    }
+    e.target.value = '';
+    render();
+  });
+});
+
+function render(){
+  const g = $('grid'); g.innerHTML = '';
+  files.forEach((it,i)=>{
+    const d = document.createElement('div'); d.className='thumb';
+    const img = new Image(); img.src = it.url; img.alt = 'Foto '+(i+1);
+    const b = document.createElement('button'); b.type='button'; b.textContent='×'; b.setAttribute('aria-label','Quitar foto');
+    b.onclick = ()=>{ URL.revokeObjectURL(it.url); files.splice(i,1); render(); };
+    d.append(img,b); g.append(d);
+  });
+  const n = files.length;
+  $('count').textContent = n ? `${n} foto${n>1?'s':''} lista${n>1?'s':''} para enviar` : 'Aún no has agregado fotos';
+  $('btnSend').disabled = n === 0;
+  if (n) hideError();
+}
+function showError(m){const e=$('error');e.textContent=m;e.style.display='block'}
+function hideError(){$('error').style.display='none'}
+
+/* ---- Cancelar: limpia todo y muestra el QR para escanear ---- */
+$('btnCancel').onclick = () => { reset(); drawQR(); show('s-scan'); };
+$('btnBack').onclick = () => show('s-upload');
+$('btnAgain').onclick = () => { reset(); show('s-upload'); };
+function reset(){ files.forEach(f=>URL.revokeObjectURL(f.url)); files=[]; render(); hideError(); }
+
+function drawQR(){
+  const url = location.href.split('#')[0];
+  const qr = qrcode(0,'M'); qr.addData(url); qr.make();
+  $('qr').innerHTML = qr.createSvgTag({cellSize:6, margin:0, scalable:true});
+}
+
+/* ---- Compresión en el celular antes de enviar ---- */
+function compress(file){
+  return new Promise(res=>{
+    // GIF y HEIC que el navegador no pueda decodificar se envían tal cual
+    const img = new Image(); const url = URL.createObjectURL(file);
+    img.onload = ()=>{
+      let {width:w, height:h} = img; const m = Math.max(w,h);
+      if (m > CONFIG.maxSide){ const k = CONFIG.maxSide/m; w=Math.round(w*k); h=Math.round(h*k); }
+      const c = document.createElement('canvas'); c.width=w; c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      URL.revokeObjectURL(url);
+      c.toBlob(b=> b ? res({blob:b, mime:'image/jpeg'}) : res({blob:file, mime:file.type||'image/jpeg'}), 'image/jpeg', CONFIG.quality);
+    };
+    img.onerror = ()=>{ URL.revokeObjectURL(url); res({blob:file, mime:file.type||'image/jpeg'}); };
+    img.src = url;
+  });
+}
+function toBase64(blob){
+  return new Promise((res,rej)=>{
+    const r = new FileReader();
+    r.onload = ()=> res(String(r.result).split(',')[1]);
+    r.onerror = rej; r.readAsDataURL(blob);
+  });
+}
+
+async function uploadOne(item){
+  const {blob, mime} = await compress(item.file);
+  const body = JSON.stringify({
+    guest: $('guest').value.trim(), mime, data: await toBase64(blob)
+  });
+  // text/plain evita el "preflight" CORS, que Apps Script no soporta
+  const opts = {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body};
+  try {
+    const r = await fetch(CONFIG.scriptUrl, opts);
+    const j = await r.json();
+    if (j.ok !== true) lastError = (j.error || 'desconocido') + (j.detail ? ' · ' + j.detail : '');
+    return j.ok === true;
+  } catch (e) {
+    // Si el navegador no deja leer la respuesta, reintenta en modo "opaco":
+    // la foto sí se envía, pero no podemos confirmar el resultado.
+    try { await fetch(CONFIG.scriptUrl, {...opts, mode:'no-cors'}); return true; }
+    catch (e2) { lastError = 'sin conexión con el script · ' + e2; return false; }
+  }
+}
+
+/* ---- Enviar ---- */
+$('btnSend').onclick = async () => {
+  if (!files.length) return;
+  if (!/^https:\/\/script\.google\.com\//.test(CONFIG.scriptUrl)) {
+    showError('Falta configurar la URL del Apps Script (ver README).'); return;
+  }
+  const queue = files.slice(); const total = queue.length; let ok = 0, fail = [];
+  show('s-sending');
+  for (let i=0;i<queue.length;i++){
+    $('sendingCount').textContent = `Foto ${i+1} de ${total}`;
+    $('bar').style.width = (i/total*100)+'%';
+    const good = await uploadOne(queue[i]);
+    good ? ok++ : fail.push(queue[i]);
+    $('bar').style.width = ((i+1)/total*100)+'%';
+  }
+  if (fail.length){
+    // Conserva solo las que fallaron para reintentar
+    files.forEach(f=>{ if(!fail.includes(f)) URL.revokeObjectURL(f.url); });
+    files = fail; render();
+    showError(`No se pudieron enviar ${fail.length} foto${fail.length>1?'s':''}. Revisa tu conexión e inténtalo de nuevo.` + (lastError ? ` (Detalle: ${lastError})` : ''));
+    show('s-upload');
+  } else { reset(); show('s-done'); }
+};
+
+/* ---- Pétalos decorativos ---- */
+(function(){
+  const p = $('petals'), e = ['🌸','🌷','🤍','✨','🌼'];
+  for(let i=0;i<12;i++){
+    const s=document.createElement('span'); s.textContent=e[i%e.length];
+    s.style.left=Math.random()*100+'%'; s.style.fontSize=(12+Math.random()*14)+'px';
+    s.style.animationDuration=(14+Math.random()*16)+'s'; s.style.animationDelay=(-Math.random()*20)+'s';
+    p.appendChild(s);
+  }
+})();
+</script>
+</body>
+</html>
